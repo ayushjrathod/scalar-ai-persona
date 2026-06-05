@@ -1,0 +1,14 @@
+# LiveKit agents framework and plugins
+livekit-agents>=0.12
+livekit-plugins-sarvam>=0.1
+livekit-plugins-openai>=0.12
+livekit-plugins-silero>=0.7
+livekit-plugins-turn-detector>=1.5
+
+# API server
+fastapi>=0.115
+uvicorn>=0.34
+
+# Config and env
+pydantic-settings>=2.7
+python-dotenv>=1.0
