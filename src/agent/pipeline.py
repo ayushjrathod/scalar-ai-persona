@@ -6,6 +6,7 @@ from livekit.plugins import sarvam
 from livekit.plugins import silero
 from livekit.plugins.turn_detector.english import EnglishModel, _EUORunnerEn  # _EUORunnerEn registers its inference runner at import time
 
+from agent.monitoring import MetricsCollector, attach_metrics
 from agent.persona import build_system_prompt
 
 logger = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ class PersonaAgent(Agent):
         self.session.say(_GREETING)
 
 
-def build_pipeline() -> tuple[AgentSession, PersonaAgent]:
+def build_pipeline() -> tuple[AgentSession, PersonaAgent, MetricsCollector]:
     from utils.config import settings
 
     vad = silero.VAD.load()
@@ -73,6 +74,9 @@ def build_pipeline() -> tuple[AgentSession, PersonaAgent]:
 
     agent = PersonaAgent(instructions=build_system_prompt())
 
+    collector = MetricsCollector()
+    attach_metrics(session, collector, stt=stt, llm=llm, tts=tts)
+
     logger.info(
         "pipeline built: STT=%s LLM=%s TTS=%s speaker=%s lang=%s turn_det=EnglishModel endpointing_min=0.3s preemptive_tts=True",
         settings.STT_MODEL,
@@ -82,4 +86,4 @@ def build_pipeline() -> tuple[AgentSession, PersonaAgent]:
         settings.TTS_LANGUAGE,
     )
 
-    return session, agent
+    return session, agent, collector
