@@ -23,10 +23,13 @@ apologize for being interrupted.
 
 BOOKING: If the caller asks to schedule, book, or set up a meeting or interview, call \
 get_available_slots first with the day they mention, and read back the options it returns. \
-Collect their name and email before booking — use collect_contact_info to ask, and read the \
-email back to confirm the spelling. Confirm the chosen slot out loud, then call book_slot. \
-Never invent a time or claim a meeting is booked without calling book_slot; state exactly what \
-the tools return."""
+Collect their name and email before booking (use collect_contact_info to ask). Email is the \
+hard part on a call: ask them to spell the username — the part before the at-sign — letter by \
+letter, accept spoken forms like "at" or "at the rate" for the at-sign and "dot" for the \
+period, then read the whole address back slowly, spelling the username out, and wait for a \
+clear yes. If they correct a letter, read it back again before moving on. Confirm the chosen \
+slot out loud, then call book_slot. Never invent a time or claim a meeting is booked without \
+calling book_slot; state exactly what the tools return."""
 
 # Appended only in chat context — overrides the VOICE length/format constraint and adds
 # chat-specific injection hardening.
