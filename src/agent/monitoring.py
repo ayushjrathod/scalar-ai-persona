@@ -52,7 +52,7 @@ import statistics
 import time
 from collections import deque
 from pathlib import Path
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
@@ -83,6 +83,9 @@ METRICS_API_LIMIT: int = 100
 class TurnMetrics:
     """Latency and cost record for one voice turn."""
 
+  
+    timestamp: float = field(default_factory=time.time)
+    responded: bool = True
 
     # Latency — sourced from ChatMessage.metrics (MetricsReport, pre-computed by LiveKit)
     e2e_latency: Optional[float] = None         # user stopped speaking → agent audio started
