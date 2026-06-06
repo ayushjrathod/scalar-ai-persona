@@ -106,7 +106,11 @@ class VectorStore:
             )
             for c, vec in zip(chunks, vectors)
         ]
-        self._client.upsert(collection_name=self._collection, points=points)
+        for i in range(0, len(points), self._batch_size):
+            self._client.upsert(
+                collection_name=self._collection,
+                points=points[i : i + self._batch_size],
+            )
 
     def search(
         self,

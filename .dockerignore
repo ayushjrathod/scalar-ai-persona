@@ -1,0 +1,34 @@
+# Keep the Docker build context small and never ship secrets into an image.
+# What images DO need: src/, public/, requirements.txt, Dockerfile.*
+
+# VCS
+.git/
+**/.git/
+.gitignore
+
+# Python caches / virtualenvs
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+ENV/
+.mypy_cache/
+.pytest_cache/
+
+# Secrets / local env — NEVER bake into an image
+.env
+.env.*
+*.env
+
+# Not needed at runtime: RAG corpus is already ingested into Qdrant Cloud
+repos/
+temp/
+metrics/
+
+# Docs / scratch / tooling
+*.md
+.claude/
+public/**/*.map

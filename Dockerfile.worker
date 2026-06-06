@@ -1,0 +1,35 @@
+# LiveKit voice worker — deployed to GCE e2-micro (persistent WebSocket, always-on).
+# NOT for Cloud Run (scale-to-zero would kill the long-lived connection).
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# onnxruntime (Silero VAD + turn-detector EOU model) needs libgomp at runtime.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libgomp1 ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src/ src/
+
+ENV PYTHONPATH=src \
+    LOG_LEVEL=INFO \
+    HF_HOME=/app/.cache/huggingface
+
+# Bake the Silero VAD + turn-detector model files INTO the image so the worker
+# starts instantly and never downloads on a cold e2-micro.
+# The pipeline import chain instantiates Settings(), which validates required env
+# vars — so we pass format-valid PLACEHOLDERS here. They are only used to satisfy
+# validation during the build (no network calls happen at import). The REAL values
+# are injected at runtime via --container-env-file (see deploy.md).
+RUN LIVEKIT_URL=wss://placeholder.livekit.cloud \
+    LIVEKIT_API_KEY=placeholder \
+    LIVEKIT_API_SECRET=placeholder \
+    SARVAM_API_KEY=placeholder \
+    OPENAI_API_KEY=sk-placeholder \
+    python src/agent/worker.py download-files
+
+# Production mode: maintain a persistent WebSocket to LiveKit Cloud and accept jobs.
+CMD ["python", "src/agent/worker.py", "start"]

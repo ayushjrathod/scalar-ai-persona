@@ -34,8 +34,8 @@ class Settings(BaseSettings):
     METRICS_STORE_PATH: str = str(_PROJECT_ROOT / "metrics" / "metrics.jsonl")
 
     # RAG
-    QDRANT_URL: str = None
-    QDRANT_API_KEY: str = None
+    QDRANT_URL: Optional[str] = None
+    QDRANT_API_KEY: Optional[str] = None
     QDRANT_COLLECTION: str = "persona"
     EMBEDDING_MODEL: str = "text-embedding-3-small"
     EMBEDDING_DIMS: int = 1536
@@ -53,9 +53,9 @@ class Settings(BaseSettings):
     RAG_RETRIEVAL_TIMEOUT_S: float = 3.0
 
     # Calender booking
-    CALCOM_API_KEY: str = None
-    CALCOM_USERNAME: str= None
-    CALCOM_EVENT_SLUG: str = None
+    CALCOM_API_KEY: Optional[str] = None
+    CALCOM_USERNAME: Optional[str] = None
+    CALCOM_EVENT_SLUG: Optional[str] = None
     CALCOM_API_BASE: str = "https://api.cal.com/v2"
     CALCOM_EVENT_TYPES_API_VERSION: str = "2024-06-14"
     CALCOM_SLOTS_API_VERSION: str = "2024-09-04"

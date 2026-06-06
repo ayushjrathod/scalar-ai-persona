@@ -1,0 +1,30 @@
+# Controls what `gcloud builds submit` uploads as the build context tarball.
+# (When present, gcloud uses ONLY this file and ignores .gitignore.)
+# Must keep: src/, public/, requirements.txt, Dockerfile.api, Dockerfile.worker, cloudbuild.yaml
+
+.git/
+**/.git/
+.gitignore
+
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.mypy_cache/
+.pytest_cache/
+
+# Secrets — never upload
+.env
+.env.*
+*.env
+
+# Already in Qdrant Cloud / not needed in the image
+repos/
+temp/
+metrics/
+
+# Docs / scratch
+*.md
+.claude/
