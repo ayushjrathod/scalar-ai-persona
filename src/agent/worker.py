@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 from livekit.agents import JobContext, WorkerOptions, cli
@@ -14,14 +15,17 @@ async def entrypoint(ctx: JobContext) -> None:
     # Connect the agent participant to the LiveKit room.
     await ctx.connect()
 
-    # Block until the SIP caller (or any remote participant) has joined.
+    # Block until the SIP caller has joined.
     caller = await ctx.wait_for_participant()
     logger.info("caller joined | identity=%s", caller.identity)
 
     # Build the full cascade pipeline. MetricsCollector is already wired
     session, agent, collector = build_pipeline()
+    session_closed = asyncio.Event()
+    session.on("close", lambda _ev: session_closed.set())
 
     await session.start(agent, room=ctx.room, capture_run=True)
+    await session_closed.wait()
 
     # Call has ended
     summary = collector.get_summary()
